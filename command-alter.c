@@ -26,7 +26,7 @@ enum cmd_err cmd_pend(int argc, char **argv) {
 	return cmd_alter(argc, argv, STATE_PEND);
 }
 
-static enum cmd_err cmd_alter(int argc, char **argv, enum state st) {
+enum cmd_err cmd_alter(int argc, char **argv, enum state st) {
 	enum cmd_err result = CMD_ERR_OK;
 	char *filename = parse_filename(argc, argv);
 	unsigned int cla_si, cla_ssi, cla_from, cla_to;

@@ -46,7 +46,7 @@ err:
 	return result;
 }
 
-static enum err cmd_brief_all(char *filename, bool compact) {
+enum err cmd_brief_all(char *filename, bool compact) {
 	struct sect *rec;
 	if (load_record(filename, &rec) != ERR_OK) return ERR_ERR;
 	struct counter *cntr = new_counter();
@@ -81,7 +81,8 @@ static enum err cmd_brief_all(char *filename, bool compact) {
 	free_record(rec);
 	return ERR_OK;
 }
-static enum err cmd_brief_sect(char *filename, unsigned int si, bool compact) {
+
+enum err cmd_brief_sect(char *filename, unsigned int si, bool compact) {
 	struct sect *rec;
 	if (load_record(filename, &rec) != ERR_OK) return ERR_ERR;
 	struct sect *sect = find_sect(rec, si);
