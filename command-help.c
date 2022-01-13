@@ -12,9 +12,15 @@ enum cmd_err cmd_help(int argc, char **argv) {
 	puts("    tcel format [-r<file>]");
 	puts("    tcel (done | part | skip | plan | pend) <tasks> [-r<file>]");
 	puts("");
-	puts("Flags:");
+	puts("Task specification formats:");
+	puts("    <section>.<task>");
+	puts("    <section>.<from>-<to>");
+	puts("    <section>.<subsection>.<task>");
+	puts("    <section>.<subsection>.<from>-<to>");
+	puts("");
+	puts("Options:");
 	puts("  --compact");
-	puts("    Show sections only, omit subsections");
+	puts("    Show sections only");
 	puts("  --no-color");
 	puts("    Disable colored output");
 	puts("  -r<file>");
