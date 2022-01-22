@@ -175,7 +175,7 @@ struct subsect *find_subsect(struct subsect *ssl, unsigned int ssi) {
 enum err load_record(char *filename, struct sect **sl) {
 	FILE *fin = fopen(filename, "r");
 	if (fin == NULL) {
-		fprintf(stderr, "Open file failed\n");
+		fprintf(stderr, "Open file %s failed\n", filename);
 		return ERR_ERR;
 	}
 	enum err err = load_record_detail(fin, sl);
@@ -185,7 +185,7 @@ enum err load_record(char *filename, struct sect **sl) {
 enum err dump_record(char *filename, struct sect *sl) {
 	FILE *fout = fopen(filename, "w");
 	if (fout == NULL) {
-		fprintf(stderr, "Open file failed\n");
+		fprintf(stderr, "Open file %s failed\n", filename);
 		return ERR_ERR;
 	}
 	dump_record_detail(fout, sl);
