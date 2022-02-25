@@ -13,7 +13,9 @@ Several commands are provided by tcel:
 - `format` to format the record file,
 - `done`, `part`, `skip`, `plan`, `pend` to alter task state.
 
-Commands that operate on sections and subsections will **not** be provided, as one rarely does these and a text editor fits the job perfectly.
+Originally I decided that commands that operates on sections and subsections should not be provided, but as my record file grew to over a thousand lines, editing it with a text editor directly is painful because it is always hard to locate sections and subsections. Now that these commands are planned, namely `add`, `remove`, `rename` and `move`. A `append` command may be also added.
+
+An alternative binary storage format is under consideration.
 
 ## Coding conventions
 
