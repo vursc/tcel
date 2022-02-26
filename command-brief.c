@@ -72,7 +72,7 @@ enum err cmd_brief_all(char *filename, bool compact) {
 
 	if (compact) print_sep();
 	putchar('\n');
-	printf("%u tasks, %u done, %u part, %u skip, %u plan, %u pend\n",
+	printf("%u tasks. %u done, %u part, %u skip, %u plan, %u pend.\n",
 		cntr->total, cntr->cnts[STATE_DONE],
 		cntr->cnts[STATE_PART], cntr->cnts[STATE_SKIP],
 		cntr->cnts[STATE_PLAN], cntr->cnts[STATE_PEND]);
@@ -107,13 +107,13 @@ void counter_add(struct counter *dest, struct counter *src) {
 }
 
 void print_header() {
-	puts("======= ===== ===================== ==============================");
-	puts("   #    total         counts                     name");
-	puts("======= ===== ===================== ==============================");
+	puts("======= ======= ========================== ==============================");
+	puts("   #     total            counts                        name");
+	puts("======= ======= ========================== ==============================");
 }
 
 void print_sep() {
-	puts("------- ----- --------------------- ------------------------------");
+	puts("------- ------- ---------------------------- ------------------------------");
 }
 
 void brief_sect(struct sect *s, unsigned int si) {
@@ -135,7 +135,7 @@ void brief_subsects(struct sect *s, unsigned int si) {
 	while (ss != NULL) {
 		printf("%3u.%-3u ", si + 1, ssi);
 		brief_counter(ss->cntr);
-		if (ss->name != NULL) printf("     %s", ss->name);
+		if (ss->name != NULL) printf("      %s", ss->name);
 		putchar('\n');
 		ss = ss->next;
 		++ssi;
@@ -143,9 +143,9 @@ void brief_subsects(struct sect *s, unsigned int si) {
 }
 
 void brief_counter(struct counter *cntr) {
-	printf("%5u  ", cntr->total);
+	printf("%7u  ", cntr->total);
 	for (enum state st = STATE_DONE; st < STATE_NVAR; ++st) {
-		if (cntr->cnts[st] > 0) printf("%3u ", cntr->cnts[st]);
-		else printf("  . ");
+		if (cntr->cnts[st] > 0) printf("%4u ", cntr->cnts[st]);
+		else printf("   . ");
 	}
 }
