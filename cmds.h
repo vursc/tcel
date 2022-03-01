@@ -4,9 +4,7 @@
 #include "common.h"
 
 enum cmd {
-	CMD_HELP,
-	CMD_SHOW, CMD_BRIEF,
-	CMD_FMT,
+	CMD_HELP, CMD_SHOW, CMD_BRIEF, CMD_FMT,
 	CMD_DONE, CMD_PART, CMD_SKIP, CMD_PLAN, CMD_PEND,
 	CMD_NVAR
 };

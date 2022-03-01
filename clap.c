@@ -1,4 +1,4 @@
-#include "parsers.h"
+#include "clap.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,12 +32,10 @@ bool parse_flag(int argc, char **argv, char *flag, bool fallback) {
 	bool result = fallback;
 	for (int i = 1; i < argc; ++i) {
 		if (argv[i][0] == '\0') continue;
-		if (strncmp(argv[i], "--", strlen("--")) == 0
-			&& strcmp(argv[i] + strlen("--"), flag) == 0) {
+		if (strncmp(argv[i], "--", strlen("--")) == 0 && strcmp(argv[i] + strlen("--"), flag) == 0) {
 			argv[i][0] = '\0';
 			result = true;
-		} else if (strncmp(argv[i], "--no-", strlen("--no-")) == 0
-			&& strcmp(argv[i] + strlen("--no-"), flag) == 0) {
+		} else if (strncmp(argv[i], "--no-", strlen("--no-")) == 0 && strcmp(argv[i] + strlen("--no-"), flag) == 0) {
 			argv[i][0] = '\0';
 			result = false;
 		}
@@ -49,17 +47,12 @@ bool parse_simple_flag(int argc, char **argv, char *flag) {
 	bool result = false;
 	for (int i = 1; i < argc; ++i) {
 		if (argv[i][0] == '\0') continue;
-		if (strncmp(argv[i], "--", strlen("--")) == 0
-			&& strcmp(argv[i] + strlen("--"), flag) == 0) {
+		if (strncmp(argv[i], "--", strlen("--")) == 0 && strcmp(argv[i] + strlen("--"), flag) == 0) {
 			argv[i][0] = '\0';
 			result = true;
 		}
 	}
 	return result;
-}
-
-bool parse_color(int argc, char **argv) {
-	return !parse_simple_flag(argc, argv, "no-color");
 }
 
 char *parse_filename(int argc, char **argv) {
@@ -91,8 +84,7 @@ enum err parse_sect_spec(int argc, char **argv, unsigned int *si) {
 	for (int i = 1; i < argc; ++i) {
 		if (argv[i][0] == '\0') continue;
 		int pos;
-		if (sscanf(argv[i], "%u%n", &si_, &pos) == 1
-			&& argv[i][pos] == '\0') {
+		if (sscanf(argv[i], "%u%n", &si_, &pos) == 1 && argv[i][pos] == '\0') {
 			*si = si_ - 1;
 			argv[i][0] = '\0';
 			return ERR_OK;
@@ -101,14 +93,12 @@ enum err parse_sect_spec(int argc, char **argv, unsigned int *si) {
 	return ERR_ERR;
 }
 
-enum err parse_subsect_spec(int argc, char **argv, unsigned int *si,
-	unsigned int *ssi) {
+enum err parse_subsect_spec(int argc, char **argv, unsigned int *si, unsigned int *ssi) {
 	unsigned int si_, ssi_;
 	for (int i = 1; i < argc; ++i) {
 		if (argv[i][0] == '\0') continue;
 		int pos;
-		if (sscanf(argv[i], "%u.%u%n", &si_, &ssi_, &pos) == 2
-			&& argv[i][pos] == '\0') {
+		if (sscanf(argv[i], "%u.%u%n", &si_, &ssi_, &pos) == 2 && argv[i][pos] == '\0') {
 			*si = si_ - 1;
 			*ssi = ssi_;
 			argv[i][0] = '\0';
@@ -118,9 +108,7 @@ enum err parse_subsect_spec(int argc, char **argv, unsigned int *si,
 	return ERR_ERR;
 }
 
-enum err parse_task_spec(int argc, char **argv,
-	unsigned int *si, unsigned int *ssi,
-	unsigned int *from, unsigned int *to) {
+enum err parse_task_spec(int argc, char **argv, unsigned int *si, unsigned int *ssi, unsigned int *from, unsigned int *to) {
 	unsigned int si_, ssi_, from_, to_;
 	for (int i = 1; i < argc; ++i) {
 		if (argv[i][0] == '\0') continue;

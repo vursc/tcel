@@ -47,14 +47,11 @@ char state_to_char(enum state st);
 struct sect *new_sect();
 struct subsect *new_subsect();
 struct counter *new_counter();
-void free_record(struct sect *sl);
+void free_record(struct sect *rec);
 void free_sect(struct sect *s);
 void free_subsect(struct subsect *ss);
 
 struct sect *find_sect(struct sect *sl, unsigned int si);
 struct subsect *find_subsect(struct subsect *ssl, unsigned int ssi);
-
-enum err load_record(char *filename, struct sect **sl);
-enum err dump_record(char *filename, struct sect *sl);
 
 #endif

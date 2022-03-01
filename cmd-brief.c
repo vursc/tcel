@@ -1,12 +1,13 @@
-#include "commands.h"
+#include "cmds.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "parsers.h"
+#include "clap.h"
+#include "serde.h"
 
-static enum err cmd_brief_all(char *filename, bool compact);
-static enum err cmd_brief_sect(char *filename, unsigned int si, bool compact);
+static enum err cmd_brief_all(struct sect *rec, void *userdata);
+static enum err cmd_brief_sect(struct sect *rec, void *userdata);
 static void counter_add(struct counter *dest, struct counter *src);
 static void print_header();
 static void print_sep();
@@ -14,18 +15,23 @@ static void brief_sect(struct sect *s, unsigned int si);
 static void brief_subsects(struct sect *s, unsigned int si);
 static void brief_counter(struct counter *cntr);
 
+struct cmd_brief_arg_buf {
+	unsigned int si;
+	bool compact;
+};
+
 // EXPORTED
 enum cmd_err cmd_brief(int argc, char **argv) {
 	enum cmd_err result = CMD_ERR_OK;
-	bool cla_compact = parse_simple_flag(argc, argv, "compact");
 	char *filename = parse_filename(argc, argv);
-	unsigned int cla_si;
-	if (parse_sect_spec(argc, argv, &cla_si) == ERR_OK) {
+	struct cmd_brief_arg_buf buf;
+	buf.compact = parse_simple_flag(argc, argv, "compact");
+	if (parse_sect_spec(argc, argv, &(buf.si)) == ERR_OK) {
 		if (parse_done(argc, argv) != ERR_OK) {
 			result = CMD_ERR_CLA;
 			goto err;
 		}
-		if (cmd_brief_sect(filename, cla_si, cla_compact) != ERR_OK) {
+		if (process(filename, cmd_brief_sect, &buf, false) != ERR_OK) {
 			result = CMD_ERR_EXEC;
 			goto err;
 		}
@@ -34,7 +40,7 @@ enum cmd_err cmd_brief(int argc, char **argv) {
 			result = CMD_ERR_CLA;
 			goto err;
 		}
-		if (cmd_brief_all(filename, cla_compact) != ERR_OK) {
+		if (process(filename, cmd_brief_all, &buf, false) != ERR_OK) {
 			result = CMD_ERR_EXEC;
 			goto err;
 		}
@@ -46,57 +52,42 @@ err:
 	return result;
 }
 
-enum err cmd_brief_all(char *filename, bool compact) {
-	struct sect *rec;
-	if (load_record(filename, &rec) != ERR_OK) return ERR_ERR;
+enum err cmd_brief_all(struct sect *rec, void *userdata) {
+	struct cmd_brief_arg_buf *buf = userdata;
 	struct counter *cntr = new_counter();
-	if (cntr == NULL) {
-		free_record(rec);
-		return ERR_ERR;
-	}
-
+	if (cntr == NULL) return ERR_ERR;
 	print_header();
-
 	struct sect *s = rec;
 	unsigned int si = 0;
 	while (s != NULL) {
 		counter_add(cntr, s->cntr);
 		brief_sect(s, si);
-		if (!compact) {
+		if (!(buf->compact)) {
 			brief_subsects(s, si);
 			print_sep();
 		}
 		s = s->next;
 		++si;
 	}
-
-	if (compact) print_sep();
+	if (buf->compact) print_sep();
 	putchar('\n');
 	printf("%u tasks. %u done, %u part, %u skip, %u plan, %u pend.\n",
 		cntr->total, cntr->cnts[STATE_DONE],
 		cntr->cnts[STATE_PART], cntr->cnts[STATE_SKIP],
 		cntr->cnts[STATE_PLAN], cntr->cnts[STATE_PEND]);
 	putchar('\n');
-
-	free_record(rec);
 	return ERR_OK;
 }
 
-enum err cmd_brief_sect(char *filename, unsigned int si, bool compact) {
-	struct sect *rec;
-	if (load_record(filename, &rec) != ERR_OK) return ERR_ERR;
-	struct sect *sect = find_sect(rec, si);
-	if (sect == NULL) {
-		free_record(rec);
-		return ERR_ERR;
-	}
+enum err cmd_brief_sect(struct sect *rec, void *userdata) {
+	struct cmd_brief_arg_buf *buf = userdata;
+	struct sect *sect = find_sect(rec, buf->si);
+	if (sect == NULL) return ERR_ERR;
 	print_header();
-	brief_sect(sect, si);
-	if (!compact) brief_subsects(sect, si);
+	brief_sect(sect, buf->si);
+	if (!(buf->compact)) brief_subsects(sect, buf->si);
 	print_sep();
 	putchar('\n');
-
-	free_record(rec);
 	return ERR_OK;
 }
 

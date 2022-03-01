@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "commands.h"
+#include "clap.h"
+#include "cmds.h"
 #include "common.h"
-#include "parsers.h"
 
 int main(int argc, char **argv) {
 	enum cmd cmd = parse_command(argc, argv);
