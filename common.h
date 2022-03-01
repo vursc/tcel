@@ -1,6 +1,10 @@
 #ifndef TCEL_COMMON_H_
 #define TCEL_COMMON_H_
 
+// Enums, structs and functions declared here handles basic operations on
+// states, sects, subsects and counters.
+// these functions are defined in common.c.
+
 enum err {
 	ERR_OK,
 	ERR_ERR,
