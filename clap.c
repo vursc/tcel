@@ -126,7 +126,7 @@ enum err parse_task_spec(int argc, char **argv, unsigned int *si, unsigned int *
 			*si = si_ - 1;
 			*ssi = 0;
 			*from = from_ - 1;
-			*to = from_;
+			*to = to_;
 			argv[i][0] = '\0';
 			return ERR_OK;
 		} else if (sscanf(argv[i], "%u.%u.%u%n", &si_, &ssi_, &from_, &pos) == 3
